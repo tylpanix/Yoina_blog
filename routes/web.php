@@ -3,7 +3,14 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RestTestController;
 use App\Http\Controllers\Blog\PostController;
+use App\Http\Controllers\Blog\Admin\CategoryController;
 
+
+Route::prefix('admin/blog')->group(function () {
+    Route::resource('categories', CategoryController::class)
+        ->only(['index', 'edit', 'store', 'update', 'create'])
+        ->names('blog.admin.categories');
+});
 Route::get('/', function () {
     return view('welcome');
 });
