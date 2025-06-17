@@ -8,7 +8,7 @@
             @else
                 <form method="POST" action="{{ route('blog.admin.categories.store') }}">
                     @endif
-    
+
         @csrf
         <div class="container">
             @if ($errors->any())
