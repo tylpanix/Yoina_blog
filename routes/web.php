@@ -4,13 +4,20 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RestTestController;
 use App\Http\Controllers\Blog\PostController;
 use App\Http\Controllers\Blog\Admin\CategoryController;
+use App\Http\Controllers\Blog\Admin\PostController as AdminPostController;
 
 
 Route::prefix('admin/blog')->group(function () {
     Route::resource('categories', CategoryController::class)
         ->only(['index', 'edit', 'store', 'update', 'create'])
         ->names('blog.admin.categories');
+
+    // BlogPost
+    Route::resource('posts', AdminPostController::class)
+        ->except(['show']) // не робити маршрут для show
+        ->names('blog.admin.posts');
 });
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -24,6 +31,7 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+
 Route::resource('rest', RestTestController::class)->names('restTest');
 
 Route::group(['prefix' => 'blog'], function () {
