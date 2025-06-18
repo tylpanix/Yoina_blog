@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers\Blog\Admin;
+use App\Jobs\BlogPostAfterCreateJob;
+use App\Jobs\BlogPostAfterDeleteJob;
 
 use App\Http\Controllers\Controller;
 use App\Models\BlogPost;
@@ -31,8 +33,22 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+
+        $item = BlogPost::create($data);
+
+        if ($item) {
+            $job = new BlogPostAfterCreateJob($item);
+            $this->dispatch($job);
+
+            return redirect()
+                ->route('blog.admin.posts.edit', [$item->id])
+                ->with(['success' => 'Успішно збережено']);
+        }
+
+        return back()->withErrors(['msg' => 'Помилка збереження'])->withInput();
     }
+
 
     /**
      * Display the specified resource.
@@ -63,6 +79,23 @@ class PostController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $item = BlogPost::find($id);
+
+        if (!$item) {
+            return back()->withErrors(['msg' => "Запис id[$id] не знайдено"]);
+        }
+
+        $result = $item->delete();
+
+        if ($result) {
+            BlogPostAfterDeleteJob::dispatch($id)->delay(now()->addSeconds(20));
+
+            return redirect()
+                ->route('blog.admin.posts.index')
+                ->with(['success' => "Запис id[$id] видалено"]);
+        }
+
+        return back()->withErrors(['msg' => 'Помилка видалення']);
     }
+
 }
