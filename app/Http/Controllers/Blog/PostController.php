@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Blog;
+namespace App\Http\Controllers\Blog\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\BlogPost;
 use Illuminate\Http\Request;
 
-class PostController extends BaseController
+class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
