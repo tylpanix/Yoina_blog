@@ -5,6 +5,8 @@ use App\Http\Controllers\RestTestController;
 use App\Http\Controllers\Blog\PostController;
 use App\Http\Controllers\Blog\Admin\CategoryController;
 use App\Http\Controllers\Blog\Admin\PostController as AdminPostController;
+use App\Http\Controllers\DiggingDeeperController;
+
 
 
 Route::prefix('admin/blog')->group(function () {
@@ -17,7 +19,13 @@ Route::prefix('admin/blog')->group(function () {
         ->except(['show']) // не робити маршрут для show
         ->names('blog.admin.posts');
 });
+Route::group(['prefix' => 'digging_deeper'], function () {
 
+    Route::get('collections', [DiggingDeeperController::class, 'collections'])
+
+        ->name('digging_deeper.collections');
+
+});
 Route::get('/', function () {
     return view('welcome');
 });
