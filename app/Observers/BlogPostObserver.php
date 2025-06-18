@@ -8,6 +8,19 @@ use Carbon\Carbon;
 class BlogPostObserver
 {
     /**
+     * Обробка перед створенням запису.
+     *
+     * @param  BlogPost  $blogPost
+     */
+    public function creating(BlogPost $blogPost)
+    {
+        $this->setPublishedAt($blogPost);
+        $this->setSlug($blogPost);
+        $this->setHtml($blogPost);
+        $this->setUser($blogPost);
+    }
+
+    /**
      * Обробка перед оновленням запису.
      *
      * @param  BlogPost  $blogPost
@@ -44,42 +57,31 @@ class BlogPostObserver
     }
 
     /**
-     * Handle the BlogPost "created" event.
+     * Встановлюємо значення полю content_html з поля content_raw.
+     *
+     * @param BlogPost $blogPost
      */
-    public function created(BlogPost $blogPost): void
+    protected function setHtml(BlogPost $blogPost)
     {
-        //
+        if ($blogPost->isDirty('content_raw')) {
+            // Тут може бути конвертація з Markdown у HTML
+            $blogPost->content_html = $blogPost->content_raw;
+        }
     }
 
     /**
-     * Handle the BlogPost "updated" event.
+     * Якщо user_id не вказано, то встановимо юзера 1.
+     *
+     * @param BlogPost $blogPost
      */
-    public function updated(BlogPost $blogPost): void
+    protected function setUser(BlogPost $blogPost)
     {
-        //
+        $blogPost->user_id = auth()->id() ?? BlogPost::UNKNOWN_USER;
     }
 
-    /**
-     * Handle the BlogPost "deleted" event.
-     */
-    public function deleted(BlogPost $blogPost): void
-    {
-        //
-    }
-
-    /**
-     * Handle the BlogPost "restored" event.
-     */
-    public function restored(BlogPost $blogPost): void
-    {
-        //
-    }
-
-    /**
-     * Handle the BlogPost "force deleted" event.
-     */
-    public function forceDeleted(BlogPost $blogPost): void
-    {
-        //
-    }
+    public function created(BlogPost $blogPost): void {}
+    public function updated(BlogPost $blogPost): void {}
+    public function deleted(BlogPost $blogPost): void {}
+    public function restored(BlogPost $blogPost): void {}
+    public function forceDeleted(BlogPost $blogPost): void {}
 }

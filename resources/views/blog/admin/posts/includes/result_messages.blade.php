@@ -1,4 +1,5 @@
-@php /** @var \Illunimate\Support\MessageBag $errors */ @endphp
+@php /** @var \Illuminate\Support\MessageBag $errors */ @endphp
+
 @if ($errors->any())
     <div class="row justify-content-center">
         <div class="col-md-11">
@@ -6,11 +7,16 @@
                 <button type="button" class="close" data-dismiss="alert" aria-label="close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                {{ $errors->first() }}
+                <ul>
+                    @foreach ($errors->all() as $errorTxt) {{-- виводимо всі помилки --}}
+                    <li>{{ $errorTxt }}</li>
+                    @endforeach
+                </ul>
             </div>
         </div>
     </div>
 @endif
+
 @if (session('success'))
     <div class="row justify-content-center">
         <div class="col-md-11">

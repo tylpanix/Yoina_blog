@@ -11,6 +11,8 @@ class BlogPost extends Model
     use HasFactory;
     use SoftDeletes;
 
+    const UNKNOWN_USER = 1;
+
     /**
      * Масив доступних для масового заповнення полів
      */
@@ -22,7 +24,7 @@ class BlogPost extends Model
         'content_raw',
         'is_published',
         'published_at',
-        'user_id',
+        // 'user_id', // <- видалено згідно з інструкцією
     ];
 
     /**
@@ -32,7 +34,6 @@ class BlogPost extends Model
      */
     public function category()
     {
-        // Стаття належить категорії
         return $this->belongsTo(BlogCategory::class);
     }
 
@@ -43,7 +44,6 @@ class BlogPost extends Model
      */
     public function user()
     {
-        // Стаття належить користувачу
         return $this->belongsTo(User::class);
     }
 }

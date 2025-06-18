@@ -68,8 +68,10 @@ class BlogCategoryRepository extends CoreRepository
         $result = $this
             ->startConditions()
             ->select($columns)
-            ->paginate($perPage); //можна $columns додати сюди
+            ->with(['parentCategory:id,title']) // <-- додаємо тут
+            ->paginate($perPage);
 
         return $result;
     }
+
 }
