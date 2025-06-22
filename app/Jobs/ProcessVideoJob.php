@@ -22,6 +22,7 @@ class ProcessVideoJob implements ShouldQueue
      */
     public function handle(): void
     {
-        //
+        logs()->info("Завдання ProcessVideoJob виконано!");
     }
+
 }

@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Jobs\ProcessVideoJob;
+use App\Jobs\GenerateCatalog\GenerateCatalogMainJob;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 use App\Models\BlogPost;
 use Carbon\Carbon;
 
@@ -18,6 +20,23 @@ class DiggingDeeperController extends Controller
      * @url https://laravel.com/api/11.x/Illuminate/Database/Eloquent/Collection.html
      *
      */
+    public function processVideo()
+    {
+        ProcessVideoJob::dispatch();
+        //Відстрочка виконання завдання. Не впливає на паузу.
+    }
+
+    /**
+     * @link http://localhost:8000/digging_deeper/prepare-catalog
+     *
+     * php artisan queue:listen --queue=generate-catalog --tries=3 --delay=10
+     */
+    public function prepareCatalog()
+    {
+        \App\Jobs\GenerateCatalog\GenerateCatalogMainJob::dispatch();
+
+        return response('Catalog generation started!', 200);
+    }
 
     public function collections()
     {
